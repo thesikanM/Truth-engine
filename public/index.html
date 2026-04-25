@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Truth Engine — Universal Authenticity Validation System</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="navbar">
+    <div class="nav-inner">
+      <div class="nav-logo">
+        <span class="logo-icon">⬡</span>
+        <span class="logo-text">Truth<strong>Engine</strong></span>
+      </div>
+      <ul class="nav-links">
+        <li><a href="#validator">Validator</a></li>
+        <li><a href="#overview">Overview</a></li>
+        <li><a href="#analytics">Analytics</a></li>
+        <li><a href="#history">History</a></li>
+      </ul>
+      <button class="nav-cta" onclick="document.getElementById('validator').scrollIntoView({behavior: 'smooth'})">Validate Now</button>
+    </div>
+  </nav>
+
+  <!-- VALIDATOR SECTION -->
+  <section class="validator-section" id="validator">
+    <div class="validator-container">
+      <div class="validator-header">
+        <h2>Review Authenticity Validator</h2>
+        <p>Paste a product review, app feedback, or share a link to get an instant accuracy score</p>
+      </div>
+
+      <div class="validator-card">
+        <form id="validatorForm" class="validator-form">
+          <div class="form-group">
+            <label for="reviewContent">Review Content</label>
+            <textarea 
+              id="reviewContent" 
+              placeholder="Paste your review here... (e.g., 'This product is amazing! It works perfectly and arrived on time. Highly recommend to everyone!')"
+              rows="6"
+              required
+            ></textarea>
+            <span class="char-count"><span id="charCount">0</span>/500</span>
+          </div>
+
+          <div class="form-group">
+            <label for="sourceUrl">Source URL (Optional)</label>
+            <input 
+              type="url" 
+              id="sourceUrl" 
+              placeholder="https://amazon.com/product/review or https://github.com/project/issues"
+            />
+          </div>
+
+          <button type="submit" class="btn-primary btn-submit">
+            <span class="btn-text">Validate Review</span>
+            <span class="btn-loader" style="display: none;">
+              <span class="spinner"></span> Analyzing...
+            </span>
+          </button>
+        </form>
+
+        <!-- Result Display -->
+        <div id="resultContainer" class="result-container" style="display: none;">
+          <div class="result-header">
+            <h3>Validation Result</h3>
+            <button class="btn-close" onclick="resetValidator()">×</button>
+          </div>
+
+          <div class="score-display">
+            <div class="score-circle">
+              <svg viewBox="0 0 200 200" class="score-ring">
+                <circle cx="100" cy="100" r="80" class="score-ring-track"/>
+                <circle cx="100" cy="100" r="80" class="score-ring-fill" id="scoreRingFill"/>
+              </svg>
+              <div class="score-value">
+                <span id="scoreNumber">0</span>
+                <span class="score-unit">/ 100</span>
+              </div>
+            </div>
+
+            <div class="score-status">
+              <div id="scoreStatus" class="status-badge"></div>
+              <p id="scoreMessage" class="score-message"></p>
+            </div>
+          </div>
+
+          <div class="factors-breakdown">
+            <h4>Trust Factors Breakdown</h4>
+            <div class="factors-grid">
+              <div class="factor-item">
+                <span class="factor-label">Content Length</span>
+                <div class="factor-bar">
+                  <div class="factor-fill" id="factor-contentLength"></div>
+                </div>
+                <span class="factor-value" id="factor-contentLength-val">0</span>
+              </div>
+              <div class="factor-item">
+                <span class="factor-label">URL Credibility</span>
+                <div class="factor-bar">
+                  <div class="factor-fill" id="factor-urlCredibility"></div>
+                </div>
+                <span class="factor-value" id="factor-urlCredibility-val">0</span>
+              </div>
+              <div class="factor-item">
+                <span class="factor-label">Sentiment Balance</span>
+                <div class="factor-bar">
+                  <div class="factor-fill" id="factor-sentimentBalance"></div>
+                </div>
+                <span class="factor-value" id="factor-sentimentBalance-val">0</span>
+              </div>
+              <div class="factor-item">
+                <span class="factor-label">Detail Level</span>
+                <div class="factor-bar">
+                  <div class="factor-fill" id="factor-detailLevel"></div>
+                </div>
+                <span class="factor-value" id="factor-detailLevel-val">0</span>
+              </div>
+              <div class="factor-item">
+                <span class="factor-label">Language Quality</span>
+                <div class="factor-bar">
+                  <div class="factor-fill" id="factor-languageQuality"></div>
+                </div>
+                <span class="factor-value" id="factor-languageQuality-val">0</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="result-meta">
+            <p><strong>Review ID:</strong> <span id="reviewId">-</span></p>
+            <p><strong>Validated at:</strong> <span id="validatedAt">-</span></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HERO -->
+  <section class="hero" id="overview">
+    <div class="hero-bg-grid"></div>
+    <div class="hero-content">
+      <div class="hero-badge">v1.0 · Full Stack Application</div>
+      <h1>The <span class="gradient-text">Truth Engine</span></h1>
+      <p class="hero-sub">A multi-layered validation ecosystem that evaluates every piece of information through verified identity, contextual similarity matching, dynamic trust scoring, and advanced anti-gaming detection.</p>
+      <div class="hero-actions">
+        <button class="btn-primary" onclick="document.getElementById('validator').scrollIntoView({behavior: 'smooth'})">Try Validator</button>
+        <button class="btn-ghost">Learn More →</button>
+      </div>
+      <div class="hero-stats">
+        <div class="stat"><span class="stat-num" id="totalReviews">0</span><span class="stat-label">Reviews Validated</span></div>
+        <div class="stat-divider"></div>
+        <div class="stat"><span class="stat-num" id="avgScore">0</span><span class="stat-label">Avg Score</span></div>
+        <div class="stat-divider"></div>
+        <div class="stat"><span class="stat-num">5</span><span class="stat-label">Trust Factors</span></div>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="orb orb-1"></div>
+      <div class="orb orb-2"></div>
+      <div class="trust-ring">
+        <svg viewBox="0 0 200 200" class="ring-svg">
+          <circle cx="100" cy="100" r="80" class="ring-track"/>
+          <circle cx="100" cy="100" r="80" class="ring-fill" stroke-dasharray="452" stroke-dashoffset="45"/>
+        </svg>
+        <div class="ring-label">
+          <span class="ring-score">94</span>
+          <span class="ring-unit">Trust Score</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 1.1 — OVERVIEW -->
+  <section class="section" id="overview-section">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">1.1</span>
+        <h2>Universal Authenticity Validation System</h2>
+        <p>Unlike traditional review mechanisms that rely solely on ratings or keyword filtering, Truth Engine analyzes <em>who</em> provides information, their historical accuracy, contextual relevance, and behavioral indicators of manipulation.</p>
+      </div>
+
+      <div class="pillars-grid">
+        <div class="pillar-card" data-index="01">
+          <div class="pillar-icon">🪪</div>
+          <h3>Identity Verification Engine</h3>
+          <p>Uses OAuth, document validation, and social proof to ensure contributor legitimacy through multiple verification tiers.</p>
+          <div class="pillar-tags">
+            <span>OAuth</span><span>Doc Validation</span><span>Social Proof</span>
+          </div>
+        </div>
+        <div class="pillar-card" data-index="02">
+          <div class="pillar-icon">📊</div>
+          <h3>Dynamic Trust Score Algorithm</h3>
+          <p>Continuously updates trustworthiness based on domain expertise, accuracy history, contribution impact, peer validation, time decay, and conflict-of-interest penalties.</p>
+          <div class="pillar-tags">
+            <span>Accuracy History</span><span>Peer Validation</span><span>Time Decay</span>
+          </div>
+        </div>
+        <div class="pillar-card" data-index="03">
+          <div class="pillar-icon">🔗</div>
+          <h3>Similarity Matching System</h3>
+          <p>Uses vector embeddings and cosine similarity to cluster related information, detect anomalies, and preserve contextual authenticity.</p>
+          <div class="pillar-tags">
+            <span>Vector Embeddings</span><span>Cosine Similarity</span><span>Clustering</span>
+          </div>
+        </div>
+        <div class="pillar-card" data-index="04">
+          <div class="pillar-icon">🛡️</div>
+          <h3>Anti-Gaming Detection Engine</h3>
+          <p>AI-powered engine designed to identify coordinated manipulation, repetitive distortions, incentive-driven misinformation, and bot-generated content.</p>
+          <div class="pillar-tags">
+            <span>Bot Detection</span><span>Graph Analysis</span><span>NLP Sentiment</span>
+          </div>
+        </div>
+        <div class="pillar-card pillar-card--wide" data-index="05">
+          <div class="pillar-icon">🌐</div>
+          <h3>Multi-Domain Aggregation Layer</h3>
+          <p>Synthesizes insights from diverse data sources to compute a comprehensive authenticity score for balanced and reliable evaluation across multiple domains — e-commerce, academia, public archives, and consumer feedback.</p>
+          <div class="pillar-tags">
+            <span>E-Commerce</span><span>Academia</span><span>Public Archives</span><span>Consumer Feedback</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 1.2 — SYSTEM COMPONENTS -->
+  <section class="section section--dark" id="components">
+    <div class="container">
+      <div class="section-header section-header--light">
+        <span class="section-tag section-tag--light">1.2</span>
+        <h2>System Components</h2>
+        <p>A tightly integrated suite of components, each performing a specialized role within the authenticity validation workflow.</p>
+      </div>
+
+      <div class="arch-wrapper">
+        <div class="arch-flow">
+
+          <div class="arch-node arch-node--ui">
+            <div class="arch-node-icon">🖥️</div>
+            <div class="arch-node-body">
+              <h4>User Interface</h4>
+              <p>Dynamic web-based dashboards, authenticity scores, validation results, and transparency reports for individuals, businesses, analysts, and moderators.</p>
+            </div>
+          </div>
+
+          <div class="arch-arrow">↓</div>
+
+          <div class="arch-row">
+            <div class="arch-node arch-node--identity">
+              <div class="arch-node-icon">🔐</div>
+              <div class="arch-node-body">
+                <h4>Identity Verification Module</h4>
+                <p>OAuth login, document validation, social network verification, and multi-factor authentication.</p>
+              </div>
+            </div>
+            <div class="arch-node arch-node--trust">
+              <div class="arch-node-icon">⚙️</div>
+              <div class="arch-node-body">
+                <h4>Trust Engine</h4>
+                <p>Dynamic scoring using accuracy metrics, historical validation, peer review comparisons, and contextual relevance analysis.</p>
+              </div>
+            </div>
+            <div class="arch-node arch-node--similarity">
+              <div class="arch-node-icon">🧠</div>
+              <div class="arch-node-body">
+                <h4>Similarity Matching Engine</h4>
+                <p>NLP embeddings, ML models, and privacy-preserving similarity computation to cluster and cross-evaluate information.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="arch-arrow">↓</div>
+
+          <div class="arch-row">
+            <div class="arch-node arch-node--fraud">
+              <div class="arch-node-icon">🚨</div>
+              <div class="arch-node-body">
+                <h4>Anti-Gaming & Fraud Detection</h4>
+                <p>Behavioral analytics, graph-based manipulation detection, NLP-driven sentiment analysis, and anomaly prediction models.</p>
+              </div>
+            </div>
+            <div class="arch-node arch-node--aggregation">
+              <div class="arch-node-icon">🌍</div>
+              <div class="arch-node-body">
+                <h4>Multi-Domain Aggregation Services</h4>
+                <p>Integrates e-commerce reviews, public archives, academic repositories, and consumer feedback for cross-domain verification.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="arch-arrow">↓</div>
+
+          <div class="arch-node arch-node--db">
+            <div class="arch-node-icon">🗄️</div>
+            <div class="arch-node-body">
+              <h4>Secure Database Layer</h4>
+              <p>Tamper-proof storage of validated data, cryptographic signatures, trust histories, and event logs with strict access controls.</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 1.3 — IMPORTANCE -->
+  <section class="section" id="importance">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">1.3</span>
+        <h2>Importance of Authenticity Validation</h2>
+        <p>Truth Engine delivers measurable value across every stakeholder — consumers, businesses, researchers, platforms, and regulators.</p>
+      </div>
+
+      <div class="benefits-grid">
+        <div class="benefit-card benefit-card--accent">
+          <div class="benefit-icon">✅</div>
+          <h3>Enhanced Decision-Making</h3>
+          <p>Verified, contextually relevant information supports accurate purchasing choices, reliable research outcomes, and transparent online interactions.</p>
+        </div>
+        <div class="benefit-card">
+          <div class="benefit-icon">🚫</div>
+          <h3>Misinformation Protection</h3>
+          <p>Reduces fake reviews, fraudulent claims, and fabricated narratives through enforced identity transparency, trust-score accountability, and cross-validation integrity.</p>
+        </div>
+        <div class="benefit-card">
+          <div class="benefit-icon">🏢</div>
+          <h3>Stronger Digital Reputations</h3>
+          <p>Businesses benefit from verified customer feedback and unbiased evaluation metrics that build credible, defensible digital reputations.</p>
+        </div>
+        <div class="benefit-card">
+          <div class="benefit-icon">👥</div>
+          <h3>Multi-Stakeholder Reliability</h3>
+          <p>Transparent authenticity assessment delivers value for consumers, organizations, content creators, digital platforms, and regulatory bodies alike.</p>
+        </div>
+        <div class="benefit-card">
+          <div class="benefit-icon">🔌</div>
+          <h3>Scalable Architecture</h3>
+          <p>Domain-agnostic design allows seamless integration of new industries, data types, and emerging verification technologies for long-term adaptability.</p>
+        </div>
+        <div class="benefit-card">
+          <div class="benefit-icon">📈</div>
+          <h3>Advanced Analytical Insights</h3>
+          <p>Anomaly reports, trust evolution graphs, and cross-domain validation heatmaps enable deeper understanding and continuous improvement of authenticity dynamics.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION — ANALYTICS DASHBOARD PREVIEW -->
+  <section class="section section--dark" id="analytics">
+    <div class="container">
+      <div class="section-header section-header--light">
+        <span class="section-tag section-tag--light">Analytics</span>
+        <h2>Live Analytics Dashboard</h2>
+        <p>Real-time insights into validation patterns and trust score distribution.</p>
+      </div>
+
+      <div class="dashboard-preview">
+        <!-- Trust Score Distribution Card -->
+        <div class="dash-card dash-card--score">
+          <div class="dash-card-header">
+            <span class="dash-card-title">Score Distribution</span>
+            <span class="dash-card-badge dash-card-badge--green">Live</span>
+          </div>
+          <div class="bar-chart">
+            <div class="bar-group" id="scoreDistribution">
+              <div class="bar" style="--h:0%"><span class="bar-label">Excellent</span></div>
+              <div class="bar bar--accent" style="--h:0%"><span class="bar-label">Good</span></div>
+              <div class="bar" style="--h:0%"><span class="bar-label">Fair</span></div>
+              <div class="bar bar--accent" style="--h:0%"><span class="bar-label">Poor</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Statistics Card -->
+        <div class="dash-card dash-card--stats">
+          <div class="dash-card-header">
+            <span class="dash-card-title">Platform Statistics</span>
+            <span class="dash-card-badge dash-card-badge--blue">Updated</span>
+          </div>
+          <div class="stats-list">
+            <div class="stat-row">
+              <span class="stat-key">Total Reviews</span>
+              <span class="stat-val" id="stat-total">0</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-key">Average Score</span>
+              <span class="stat-val" id="stat-avg">0</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-key">Highest Score</span>
+              <span class="stat-val" id="stat-max">0</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-key">Lowest Score</span>
+              <span class="stat-val" id="stat-min">0</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- REVIEW HISTORY SECTION -->
+  <section class="section" id="history">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Recent</span>
+        <h2>Validation History</h2>
+        <p>Latest reviews validated through the Truth Engine platform.</p>
+      </div>
+
+      <div class="history-table-wrapper">
+        <table class="history-table">
+          <thead>
+            <tr>
+              <th>Review ID</th>
+              <th>Content Preview</th>
+              <th>Score</th>
+              <th>Source</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody id="historyTableBody">
+            <tr class="empty-state">
+              <td colspan="5">No reviews validated yet. Start by validating a review above!</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <span class="logo-icon">⬡</span>
+        <span class="logo-text">Truth<strong>Engine</strong></span>
+        <p>Universal Authenticity Validation System</p>
+      </div>
+      <div class="footer-links">
+        <span>Validator</span>
+        <span>Overview</span>
+        <span>Analytics</span>
+        <span>API Docs</span>
+      </div>
+      <p class="footer-copy">© 2026 TruthEngine Platform. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
