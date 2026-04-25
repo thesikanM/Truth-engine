@@ -290,6 +290,11 @@ async function startServer() {
   try {
     await initializeDatabase();
     
+    // Catch-all route - serve index.html for any unmatched routes
+    app.get('*', (req, res) => {
+      res.sendFile(path.join(__dirname, 'public', 'index.html'));
+    });
+    
     app.listen(PORT, () => {
       console.log(`\n✓ Truth Engine Server running on http://localhost:${PORT}`);
       console.log(`✓ API available at http://localhost:${PORT}/api`);
