@@ -16,7 +16,7 @@ const PORT = process.env.PORT || 5000;
 // Middleware
 app.use(cors());
 app.use(express.json());
-app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Database Connection
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
@@ -163,6 +163,11 @@ function calculateTrustScore(content, sourceUrl) {
 // Health check
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', message: 'Truth Engine API is running' });
+});
+
+// Root route - serve index.html
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 // Validate review and calculate trust score
